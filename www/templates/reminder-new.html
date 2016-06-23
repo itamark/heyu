@@ -1,0 +1,21 @@
+<ion-view view-title="{{reminder.name}}">
+  <ion-content class="padding">
+    <ul class="list">
+      <li class="item item-input">
+        <input type="text" ng-model="reminder.text" placeholder="Text">
+      </li>
+      <li class="item item-toggle">
+        Recurring
+        <label class="toggle toggle-neutral">
+          <input type="checkbox" ng-model="reminder.recurring">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </li>
+      <li class="item item-input" ng-show="reminder.recurring">
+        <input type="text" ng-model="reminder.something" placeholder="Something">
+      </li>
+      </ul>
+  </ion-content>
+</ion-view>

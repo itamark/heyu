@@ -1,0 +1,19 @@
+<ion-view view-title="Reminders">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="reminder in reminders" type="item-text-wrap" href="#/tab/reminders/{{reminder._id}}">
+        <img ng-src="{{reminder.face}}">
+        <h2>{{reminder.name}}</h2>
+        <p>{{reminder.text}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <ion-option-button class="button-assertive" ng-click="remove(reminder)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+    <fab-button-right nav-transition="ios" target-id="content" ui-sref="tab.reminder-new">
+      <i class="icon ion ion-plus-round"></i>
+    </fab-button-right>
+  </ion-content>
+</ion-view>
