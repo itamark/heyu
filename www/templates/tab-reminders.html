@@ -3,8 +3,9 @@
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="reminder in reminders" type="item-text-wrap" href="#/tab/reminders/{{reminder._id}}">
         <img ng-src="{{reminder.face}}">
-        <h2>{{reminder.name}}</h2>
         <p>{{reminder.text}}</p>
+        {{reminder.datetime}}
+
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(reminder)">

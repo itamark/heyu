@@ -13,9 +13,27 @@
           </div>
         </label>
       </li>
-      <li class="item item-input" ng-show="reminder.recurring">
-        <input type="text" ng-model="reminder.something" placeholder="Something">
+      <li class="item item-input item-select" ng-show="reminder.recurring">
+        <div class="input-label">
+          Choose a day
+        </div>
+        <select ng-model="reminder.every" ng-init="reminder.every = 'Sunday'" ng-options="day as day for day in ['Sunday', 'Monday', 'Tuesday']">
+    </select>
       </li>
-      </ul>
+      <li class="item item-input" ng-show="!reminder.recurring">
+        <div class="input-label">
+          Date
+          </div>
+        <input type="date" ng-model="reminder.date" placeholder="Date">
+      </li>
+      <li class="item item-input">
+        <div class="input-label">
+          Time
+          </div>
+        <input type="time" ng-model="reminder.time" placeholder="Time">
+      </li>
+    </ul>
+            <a href="" class="button button-full button-rounded button-positive" ng-click="addReminder()">Add</a>
+
   </ion-content>
 </ion-view>

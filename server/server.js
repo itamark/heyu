@@ -30,7 +30,11 @@ router.route('/reminders')
     .post(function (req, res) {
         var reminder = new Reminder();
         reminder.text = req.body.text;
+        reminder.recurring = req.body.recurring;
+        reminder.every = req.body.every;
+        reminder.datetime = req.body.datetime;
 
+        console.log(typeof req.body.datetime)
         reminder.save(function (err) {
             if (err) {
                 res.send(err);
@@ -56,6 +60,8 @@ router.route('/login')
                 res.send(err);
             }
             if(typeof user !== 'undefined' && user ){
+                                console.log('exists');
+
                 user.fid = req.body.id || null;
                 user.first_name = req.body.cachedUserProfile.first_name || null;
                 user.last_name = req.body.cachedUserProfile.last_name || null;
@@ -70,6 +76,7 @@ router.route('/login')
                     res.json({message: 'User Created!'});
                 });
             } else {
+                console.log('new');
                 var newuser = new User();
                 newuser._id = req.body.id || null;
                 newuser.first_name = req.body.cachedUserProfile.first_name || null;

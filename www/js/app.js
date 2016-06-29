@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'heyu.services' is found in services.js
 // 'heyu.controllers' is found in controllers.js
-angular.module('heyu', ['ionic', 'heyu.controllers', 'heyu.services', 'firebase', 'ion-fab-button'])
+angular.module('heyu', ['ionic', 'heyu.controllers', 'heyu.services', 'firebase', 'ion-fab-button', 'angularMoment'])
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {

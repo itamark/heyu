@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "firebase": "~3.0.5",
-    "angularfire": "~2.0.1"
+    "angularfire": "~2.0.1",
+    "angular-moment": "~0.10.3",
+    "moment": "~2.13.0"
   }
 }

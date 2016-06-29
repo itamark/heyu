@@ -1,7 +1,13 @@
 angular.module('heyu.services', [])
 
-  .factory('Reminders', function ($http, $q) {
-    // Might use a resource here that returns a JSON array
+  .factory('Reminders', function ($http, $q, $filter) {
+
+    var initReminder = {
+      date: moment().startOf('minute').toDate(),
+      time: moment().startOf('minute').toDate(),
+      recurring: false,
+      text: ''
+    }
 
     var getReminders = function () {
       var deferred = $q.defer();
@@ -11,9 +17,18 @@ angular.module('heyu.services', [])
       return deferred.promise;
     };
 
-    var addReminder = function(){
+    var addReminder = function (reminder) {
+      console.log(reminder);
+      var data = {
+        recurring: reminder.recurring,
+        text: reminder.text,
+        datetime: reminder.date.setHours(reminder.time.getHours(), reminder.time.getMinutes(), 0, 0) + (reminder.date.getTimezoneOffset() * 60000)
+      }
+
+      console.log(data.datetime);
       var deferred = $q.defer();
       $http.post('http://localhost:8080/api/reminders', data).then(function (res) {
+        console.log(res);
         deferred.resolve(res.data);
       });
       return deferred.promise;
@@ -35,11 +50,14 @@ angular.module('heyu.services', [])
       return deferred.promise;
     };
 
+
+
     return {
       all: getReminders,
       add: addReminder,
       remove: removeReminder,
-      get: getReminderById
+      get: getReminderById,
+      init: initReminder
     };
   })
   .factory("Auth", function (PopupService, $q, $ionicHistory, $firebaseAuth, $http) {
@@ -76,8 +94,8 @@ angular.module('heyu.services', [])
           });
         }
       }, {
-        scope: "public_profile,email,user_friends"
-      });
+          scope: "public_profile,email,user_friends"
+        });
       return def.promise;
     };
 
@@ -120,7 +138,7 @@ angular.module('heyu.services', [])
 
     Auth.updateProfile = function (authData) {
       var def = $q.defer();
-      registerOrLogin(authData.facebook).then(function(res){
+      registerOrLogin(authData.facebook).then(function (res) {
         console.log(res);
       });
       //myRef.child('users').child(authData.facebook.id).set({
@@ -149,12 +167,18 @@ angular.module('heyu.services', [])
 
     return Auth;
   })
-  .service('PopupService', function ($ionicPopup, $ionicLoading) {
-    this.alert = function (title, text) {
+  .service('PopupService', function ($ionicPopup, $ionicLoading, $timeout) {
+    this.alert = function (title, text, to) {
       var alertPopup = $ionicPopup.alert({
         title: title,
         template: text
       });
+      if (to) {
+        $timeout(function () {
+          alertPopup.close(); //close the popup after 3 seconds for some reason
+        }, to);
+      }
+
 
       return alertPopup;
     };
