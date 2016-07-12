@@ -1,13 +1,15 @@
 angular.module('heyu.services', [])
 
-  .factory('Reminders', function ($http, $q, $filter) {
+  .factory('Reminders', function ($http, $q, $filter, Auth) {
 
     var initReminder = {
+      uid: Auth.user ? Auth.user._id : '',
       date: moment().startOf('minute').toDate(),
       time: moment().startOf('minute').toDate(),
       recurring: false,
-      text: ''
-    }
+      text: '',
+      done: false
+    };
 
     var getReminders = function () {
       var deferred = $q.defer();
@@ -17,13 +19,26 @@ angular.module('heyu.services', [])
       return deferred.promise;
     };
 
+    var getNextReminder = function (uid) {
+      var deferred = $q.defer();
+      $http.get('http://localhost:8080/api/reminders/fulfill/'+uid).then(function (res) {
+        console.log(res);
+        deferred.resolve(res.data);
+      }, function(err){
+        console.log(err);
+      });
+      return deferred.promise;
+    };
+
     var addReminder = function (reminder) {
-      console.log(reminder);
+      console.log(reminder.text);
       var data = {
+        uid: Auth.user._id,
         recurring: reminder.recurring,
         text: reminder.text,
-        datetime: reminder.date.setHours(reminder.time.getHours(), reminder.time.getMinutes(), 0, 0) + (reminder.date.getTimezoneOffset() * 60000)
-      }
+        datetime: reminder.date.setHours(reminder.time.getHours(), reminder.time.getMinutes(), 0, 0) + (reminder.date.getTimezoneOffset() * 60000),
+        done: reminder.done
+      };
 
       console.log(data.datetime);
       var deferred = $q.defer();
@@ -50,13 +65,23 @@ angular.module('heyu.services', [])
       return deferred.promise;
     };
 
+    var done = function(reminder){
+      var deferred = $q.defer();
+      $http.put('http://localhost:8080/api/reminders/' + reminder._id, {done: reminder.done}).then(function (res) {
+        deferred.resolve(res);
+      });
+      return deferred.promise;
+    };
+
 
 
     return {
       all: getReminders,
       add: addReminder,
+      done: done,
       remove: removeReminder,
       get: getReminderById,
+      next: getNextReminder,
       init: initReminder
     };
   })
@@ -139,7 +164,9 @@ angular.module('heyu.services', [])
     Auth.updateProfile = function (authData) {
       var def = $q.defer();
       registerOrLogin(authData.facebook).then(function (res) {
-        console.log(res);
+        //console.log(res);
+        def.resolve(res);
+
       });
       //myRef.child('users').child(authData.facebook.id).set({
       //  uid: authData.facebook.id ? authData.facebook.id : null,
@@ -147,7 +174,6 @@ angular.module('heyu.services', [])
       //  profileImageURL: authData.facebook.profileImageURL ? authData.facebook.profileImageURL : null,
       //  email: authData.facebook.email ? authData.facebook.email : null
       //});
-      def.resolve();
       return def.promise;
     };
 

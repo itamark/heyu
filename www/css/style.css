@@ -1,1 +1,15 @@
 /* Empty. Add your own CSS if you like */
+p.done{
+     text-decoration: line-through;
+ }
+
+.item-complex.item-icon-right.reminder{
+    min-height:auto;
+}
+
+.item-complex.item-icon-right.reminder  a.item-content{
+    /*padding-right: 0px;*/
+    /*padding-left: 0px;*/
+    min-height: auto;
+    padding: 16px 49px 16px 16px;
+}

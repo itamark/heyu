@@ -52,8 +52,8 @@ angular.module('heyu', ['ionic', 'heyu.controllers', 'heyu.services', 'firebase'
         url: '/dash',
         views: {
           'tab-dash': {
-            templateUrl: 'templates/tab-dash.html',
-            controller: 'DashCtrl'
+            templateUrl: 'templates/tab-fulfill.html',
+            controller: 'FulfillCtrl'
           }
         }
       })

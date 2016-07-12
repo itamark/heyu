@@ -1,16 +1,17 @@
 <ion-view view-title="Reminders">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="reminder in reminders" type="item-text-wrap" href="#/tab/reminders/{{reminder._id}}">
-        <img ng-src="{{reminder.face}}">
-        <p>{{reminder.text}}</p>
-        {{reminder.datetime}}
+      <ion-item on-swipe="toggleDone(reminder)" class="reminder item-remove-animate item-avatar item-icon-right" ng-repeat="reminder in reminders | orderBy:['done','datetime']" type="item-text-wrap" href="#/tab/reminders/{{reminder._id}}">
+        <!--<img ng-src="{{reminder.face}}">-->
+        <p ng-class="{done: reminder.done}">{{reminder.text}}<span>{{reminder.datetime | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</span>
+        </p>
+        <!--{{reminder.datetime}}-->
 
-        <i class="icon ion-chevron-right icon-accessory"></i>
+        <!--<i class="icon ion-chevron-right icon-accessory"></i>-->
 
-        <ion-option-button class="button-assertive" ng-click="remove(reminder)">
-          Delete
-        </ion-option-button>
+        <!--<ion-option-button class="button-assertive" ng-click="remove(reminder)">-->
+          <!--Delete-->
+        <!--</ion-option-button>-->
       </ion-item>
     </ion-list>
     <fab-button-right nav-transition="ios" target-id="content" ui-sref="tab.reminder-new">

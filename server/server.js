@@ -29,10 +29,13 @@ router.get('/', function (req, res) {
 router.route('/reminders')
     .post(function (req, res) {
         var reminder = new Reminder();
+        reminder.uid = req.body.uid;
         reminder.text = req.body.text;
         reminder.recurring = req.body.recurring;
         reminder.every = req.body.every;
         reminder.datetime = req.body.datetime;
+        reminder.done = req.body.done;
+
 
         console.log(typeof req.body.datetime)
         reminder.save(function (err) {
@@ -44,6 +47,7 @@ router.route('/reminders')
     })
     .get(function (req, res) {
         Reminder.find(function (err, reminders) {
+            console.log(reminders);
             if (err) {
                 res.send(err);
             }
@@ -59,8 +63,8 @@ router.route('/login')
             if (err) {
                 res.send(err);
             }
-            if(typeof user !== 'undefined' && user ){
-                                console.log('exists');
+            if (typeof user !== 'undefined' && user) {
+                console.log('exists');
 
                 user.fid = req.body.id || null;
                 user.first_name = req.body.cachedUserProfile.first_name || null;
@@ -84,7 +88,9 @@ router.route('/login')
                 newuser.email = req.body.email || null;
                 newuser.timezone = req.body.cachedUserProfile.timezone || null;
                 newuser.image = req.body.profileImageURL || null;
-                newuser.country = req.body.cachedUserProfile.location.name || null;
+                if (req.body.cachedUserProfile.location) {
+                    newuser.country = req.body.cachedUserProfile.location.name || null;
+                }
 
                 newuser.save(function (err) {
                     if (err) {
@@ -98,7 +104,21 @@ router.route('/login')
             res.json(user);
         });
     });
-
+router.route('/reminders/fulfill/:user_id')
+    .get(function (req, res) {
+        console.log(req.params.user_id);
+        //Person.findOne({ 'name.last': 'Ghost' }, 'name occupation', function (err, person) {
+        //    if (err) return handleError(err);
+        //    console.log('%s %s is a %s.', person.name.first, person.name.last, person.occupation) // Space Ghost is a talk show host.
+        //})
+        Reminder.findOne({$not: {'uid': req.params.user_id}}, function(err, reminder){
+            console.log(reminder);
+            if (err) {
+                res.send(err);
+            }
+            res.end(JSON.stringify(reminder));
+        })
+    });
 router.route('/reminders/:reminder_id')
     .get(function (req, res) {
         Reminder.findById(req.params.reminder_id, function (err, reminder) {
@@ -114,7 +134,7 @@ router.route('/reminders/:reminder_id')
                 res.send(err);
             }
 
-            reminder.text = req.body.text;
+            reminder.done = req.body.done;
 
             reminder.save(function (err) {
                 if (err) {
@@ -124,11 +144,11 @@ router.route('/reminders/:reminder_id')
             })
         })
     })
-    .delete(function(req, res){
+    .delete(function (req, res) {
         Reminder.remove({
             _id: req.params.reminder_id
-        }, function(err, reminder){
-            if(err){
+        }, function (err, reminder) {
+            if (err) {
                 res.send(err);
             }
             res.json({message: 'Reminder Deleted!'})
